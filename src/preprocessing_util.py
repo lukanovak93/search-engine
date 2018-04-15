@@ -25,7 +25,7 @@ def clean_headers(article, keep_history=True):
 
     if not keep_history:
         new_lines = remove_history(lines[index:])
-        new_article..extend(new_lines)
+        new_article.extend(new_lines)
     else:
         new_article.extend(lines[index:])
 
@@ -44,13 +44,15 @@ def remove_history(lines):
     return clean_lines
 
 # function to cleanup text by removing personal pronouns, stopwords, and puncuation and count occurances of words
-def cleanup_text(doc):
+def cleanup_text(article, doc):
     doc = nlp(doc, disable=['parser', 'ner'])
     tokens = [tok.lemma_.lower().strip() for tok in doc if tok.lemma_ != '-PRON-']
     tokens = [tok for tok in tokens if tok not in stopwords and tok not in punctuations]
 
     # 's appears a lot in the text, so it should be removed since it's not a word
-    tokens = [tok for tok in tokens if tok != '\'s']
+    # also, if a token contains a character(s) from list, remove token
+    char_list = ['.', '?', '!', ':', ';', '(', ')', '\\', '/', '%', '<', '>', '\"', '+', '*', '^', '$', '#', '=']
+    tokens = [tok for tok in tokens if tok != '\'s' and not any(c in tok for c in char_list) and not tok.startswith('$')]
 
     words_count = Counter(tokens)
     text = ' '.join(tokens)
@@ -58,7 +60,7 @@ def cleanup_text(doc):
 
 
 def preprocess(article, keep_history=True):
-    article = clean_headers(article, keep_history)
-    clean_text, words_count = cleanup_text(article)
+    article_ = clean_headers(article, keep_history)
+    clean_text, words_count = cleanup_text(article, article_)
 
     return (clean_text, words_count)
