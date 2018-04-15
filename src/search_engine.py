@@ -45,8 +45,20 @@ class SearchEngine:
 
         self.documents.update_one({'doc': doc_id}, {'$push':{'words': dict(words_count)}}, upsert=True)
 
-    def _query_word(self, w):
-        entry = self.vocab.find_one({'word': w})
+
+    def _check_all_words(self, q_words, docs):
+        res_list = []
+        for doc_id in docs:
+            document = self.documents.find_one({'doc': doc_id})
+            if all(elem in document['words'][0] for elem in q_words):
+                res_list.append(doc_id)
+
+        return res_list
+
+
+    def _query_word(self, q_words):
+        word = q_words[0]
+        entry = self.vocab.find_one({'word': word})
         if entry:
             docs = entry['docs']
             if docs:
@@ -54,29 +66,42 @@ class SearchEngine:
             else:
                 return {}
 
-            res = {}
-            for doc_id in docs:
+            term_docs = self._check_all_words(q_words, docs)
+
+            idfs = {}
+            for i in q_words:
+                w = self.vocab.find_one({'word':i})
+                idfs[i] = 1/len(w['docs'])
+
+            doc_tfidf = {}
+            for doc_id in term_docs:
                 document = self.documents.find_one({'doc': doc_id})
                 words = dict(document['words'][0])
                 s_words = sum(words.values())
-                tf = words[w]/s_words
-                res[doc_id] = tf*idf
+                tf_idf_doc = 0
+                for w in q_words:
+                    tf = words[w]/s_words
+                    tf_idf_doc += tf*idfs[w]
 
-            return OrderedDict(sorted(res.items(), reverse=True, key=itemgetter(1)))
+                doc_tfidf[doc_id] = tf_idf_doc
+
+            return doc_tfidf
 
         else:
             return {}
 
     def query(self, q):
         _, words_count = preprocess(q)
-        words = list(words_count.keys())
+        q_words = list(words_count.keys())
 
-        res = []
-        for word in words:
-            res.append(self._query_word(word))
+        result = self._query_word(q_words)
 
-        result = Counter()
-        for r in res:
-            result += Counter(r)
+        # res = []
+        # for word in q_words:
+        #     res.append(self._query_word(q_words))
+        #
+        # result = Counter()
+        # for r in res:
+        #     result += Counter(r)
 
         return OrderedDict(sorted(result.items(), reverse=True, key=itemgetter(1)))
