@@ -20,12 +20,12 @@ Run search-engine by typing:
 
 `pipenv run python src/main.py`
 
-# System information
+## System information
 The search-engine is developed on 64-bit Ubuntu 16.04
 Processor: Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
 RAM: 4GB
 
-# Implementation details
+## Implementation details
 This is very simple system that has 3 components:
 
 - Database
