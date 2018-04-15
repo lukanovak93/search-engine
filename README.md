@@ -2,7 +2,15 @@
 Search engine made to query terms in documents and rank the result documents based on their TF-IDF value.
 
 ## Setup
-Run this command in terminal to install everything needed for search-engine to work:
+Clone this repository. Then type:
+
+`cd search-engine`
+
+Give the setup script executable permission by typing:
+
+`chmod +x setup.sh`
+
+Then run setup script to install everything needed for search-engine to work:
 
 `sudo ./setup.sh`
 
