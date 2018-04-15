@@ -5,3 +5,8 @@ sudo apt-get install -y mongodb-org
 sudo pip3 install pipenv
 sudo pipenv install
 python -m spacy download en
+wget http://qwone.com/~jason/20Newsgroups/20news-bydate.tar.gz
+tar -xzf 20news-bydate.tar.gz
+rm 20news-bydate.tar.gz
+mkdir data
+mv 20news-bydate-test 20news-bydate-train data
