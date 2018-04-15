@@ -20,12 +20,13 @@ if __name__ == '__main__':
         search_engine = SearchEngine(vocab, documents)
         print('Initializing database...')
         search_engine.add_to_database('data/20news-bydate-train')
+        search_engine.add_to_database('data/20news-bydate-test')
         print('Initialized successfully!')
 
-    welcome = '''
-        Now You can type the query. If You wish to add an document or list of documents to the database,
-        type `add path/to/file/or/folder`. If you whish to exit the search engine just type `exit` or `quit`.
-    '''
+    print('''
+Now You can type the query. If You wish to add an document or list of documents to the database, type `add path/to/file/or/folder`. If you whish to exit the search engine just type `exit` or `quit`.
+    ''')
+
     while True:
         query = input('Search: ').lower()
         if query in ['bye', 'goodbye', 'exit', 'quit']:
