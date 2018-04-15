@@ -9,7 +9,7 @@ if __name__ == '__main__':
     os.system('sudo service mongod start')
 
     client = pymongo.MongoClient(maxPoolSize=None)
-    db = client.NewDB2
+    db = client.SearchEngine
     vocab = db.Vocab
     documents = db.Documents
 
