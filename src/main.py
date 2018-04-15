@@ -1,10 +1,12 @@
-from subprocess import call
+import os
 import sys
 import pymongo
 
 from search_engine import SearchEngine
 
 if __name__ == '__main__':
+
+    os.system('sudo service mongod start')
 
     client = pymongo.MongoClient(maxPoolSize=None)
     db = client.NewDB2
@@ -44,3 +46,5 @@ Now You can type the query. If You wish to add an document or list of documents 
                 cnt += 1
                 print('{0}. Document: {1}\tScore: {2:.4f}'.format(cnt, '/'.join(doc.split('/')[-2:]), score))
                 print()
+
+    os.system('sudo service mongod stop')
