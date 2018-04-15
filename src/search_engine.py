@@ -24,7 +24,7 @@ class SearchEngine:
                 elems = []
                 for e in _get_files(src_path):
                     elems.append(e)
-                for doc in tqdm(elems[:20]):
+                for doc in tqdm(elems):
                     with open(doc, 'r') as f:
                         article = f.read()
                     text, words_count = preprocess(article)
